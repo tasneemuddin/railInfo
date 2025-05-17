@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rail Info</title>
+    <link rel="stylesheet" href="index.css">
+	<script src="index.js"></script>
+</head>
+<body>
+    <div id="snackbar">This is a snackbar message!</div>
+	<header class="header">
+        <div class="logo">
+            <img src="images/logo.png" alt="Rail Info Logo">
+			<span>Rail Info</span>
+        </div>
+        <ul class="nav">
+            <li><a onclick="showPanel('home')">Home</a></li>
+            <li><a onclick="showPanel('trainSchedule')">Train Schedule</a></li>
+            <li><a onclick="showPanel('reservationChart')">Reservation Chart</a></li>
+            <li><a onclick="showPanel('about')">About</a></li>
+			<li><a onclick="showPanel('contact')">Contact</a></li>
+        </ul>
+    </header>
+    
+    <div id="home" class="content active">
+		<h2>Home</h2>
+		<p>Welcome to the home page.</p>
+	</div>
+    
+	<div id="trainSchedule" class="content">
+		<h2>Train Schedule</h2>
+		<div id="toolbar">
+			<label for="ts-trains">Select Train :</label>
+			<input type="search" list="ts-trainsList" id="ts-trains" name="ts-trains" placeholder="Train Name / Number" >
+			<datalist id="ts-trainsList"></datalist>
+		</div>	
+
+		<div id="center">
+			<div id="map"></div>
+			<!--<script async defer src="https://maps.googleapis.com/maps/api/js?sensor=false&callback=initMap"></script>-->
+			<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap"></script>
+			
+			<div id="ts-stationTable">
+				<table id="ts-dataTable">
+					<thead>
+						<tr>
+							<th>Serial No.</th>
+							<th>Station Name</th>
+							<th>Code</th>
+							<th>Arrival</th>
+							<th>Departure</th>
+							<th>Route No.</th>
+							<th>Halt Time</th>
+							<th>Distance (km)</th>
+							<th>Day</th>
+							<th>Boarding Disabled</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>		
+		</div>
+
+		<div id="toolbar">
+			<label for="ts-fromStation">From Station :</label>
+			<input autocomplete="off" autocorrect="off" type="search" list="ts-fromStationsList" id="ts-fromStation" name="ts-fromStation" placeholder="Station Code/Name" style="width:250px;height:24px;">
+			<datalist id="ts-fromStationsList"></datalist>
+
+			<label for="ts-toStation">To Station :</label>
+			<input autocomplete="off" autocorrect="off" type="search" list="ts-toStationsList" id="ts-toStation" name="ts-toStation" placeholder="Station Code/Name" style="width:250px;height:24px;">
+			<datalist id="ts-toStationsList"></datalist>
+		</div>
+	</div>
+
+	<div id="reservationChart" class="content">
+		<h2>Reservation Chart</h2>
+		<div id="toolbar">
+			<div class="widget-container">
+				<label for="rc-trains">Select Train</label>
+				<input type="search" list="rc-trainsList" id="rc-trains" name="rc-trains" placeholder="Train Name/Number">
+				<datalist id="rc-trainsList"></datalist>
+			</div>
+
+			<div class="widget-container">
+				<label for="rc-calendar">Journey Date</label>
+				<input type="date" id="rc-calendar">
+			</div>
+
+			<div class="widget-container">
+				<label for="rc-fromStation">From Station</label>
+				<input autocomplete="off" autocorrect="off" type="search" list="rc-fromStationsList" id="rc-fromStation" name="rc-fromStation" placeholder="From Station">
+				<datalist id="rc-fromStationsList"></datalist>
+			</div>
+
+			<div class="widget-container">
+				<label for="rc-toStation">To Station</label>
+				<input autocomplete="off" autocorrect="off" type="search" list="rc-toStationsList" id="rc-toStation" name="rc-toStation" placeholder="To Station">
+				<datalist id="rc-toStationsList"></datalist>
+			</div>
+
+			<div class="widget-container">
+				<button id = 'rc-chartBtn'>GET TRAIN CHART</button>
+			</div>
+		</div>
+		
+		<div id="center">
+			<div id="rc-stationTable">
+				<table id="rc-dataTable">
+					<thead>
+						<tr class="filters">
+							<th><select onchange="filterTable(0)" class="headerFilter"><option value="">All</option></select></th>
+							<th><select onchange="filterTable(1)" class="headerFilter"><option value="">All</option></select></th>
+							<th><select onchange="filterTable(2)" class="headerFilter"><option value="">All</option></select></th>
+							<th><select onchange="filterTable(3)" class="headerFilter"><option value="">All</option></select></th>
+							<th><select onchange="filterTable(4)" class="headerFilter"><option value="">All</option></select></th>
+							<th><select onchange="filterTable(5)" class="headerFilter"><option value="">All</option></select></th>
+							<th><select onchange="filterTable(6)" class="headerFilter"><option value="">All</option></select></th>
+							<th><select onchange="filterTable(7)" class="headerFilter"><option value="">All</option></select></th>
+							<th><select onchange="filterTable(8)" class="headerFilter"><option value="">All</option></select></th>
+							<!--
+							<th><input class="headerFilter" type="text" onkeyup="filterTable(0)" placeholder="Serial No."></th>
+							<th><input class="headerFilter" type="text" onkeyup="filterTable(1)" placeholder="Chart"></th>
+							<th><input class="headerFilter" type="text" onkeyup="filterTable(2)" placeholder="From Station"></th>
+							<th><input class="headerFilter" type="text" onkeyup="filterTable(3)" placeholder="To Station"></th>
+							<th><input class="headerFilter" type="text" onkeyup="filterTable(4)" placeholder="Coach"></th>
+							<th><input class="headerFilter" type="text" onkeyup="filterTable(5)" placeholder="Berth No."></th>
+							<th><input class="headerFilter" type="text" onkeyup="filterTable(6)" placeholder="Berth Code"></th>
+							<th><input class="headerFilter" type="text" onkeyup="filterTable(7)" placeholder="Cabin"></th>
+							<th><input class="headerFilter" type="text" onkeyup="filterTable(8)" placeholder="Cabin No."></th>
+							-->
+						</tr>
+						<tr>
+							<th>Serial No.</th>
+							<th>Chart</th>
+							<th>From Station</th>
+							<th>To Station</th>
+							<th>Coach</th>
+							<th>Berth No.</th>
+							<th>Berth Code</th>
+							<th>Cabin</th>
+							<th>Cabin No.</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>		
+		</div>
+	</div>
+	
+    <div id="about" class="content">
+		<h2>About</h2>
+		<p>Learn more about us.</p>
+	</div>
+	
+    <div id="contact" class="content">
+		<h2>Contact</h2>
+		<p>Get in touch with us.</p>
+	</div>
+
+	<footer class="footer">&copy; 2025 RailInfo.com. All Rights Reserved.</footer>
+</body>
+</html>
+
+<!--
+<script async="" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDjOKy4H9imUHXqpRMWDzARIZ3mRf8FWP4&amp;v=3.exp&amp;libraries=geometry,drawing,places"></script>
+-->
